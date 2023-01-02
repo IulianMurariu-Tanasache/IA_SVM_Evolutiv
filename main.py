@@ -56,29 +56,17 @@ def afisare(vector_date):
 
 
 def incrucisare(vector_date, data):
-    #dictionar
-    # iesire = {}
-    # for site in vector_date:
-    #     dict = {}
-    #     dict2 = {}
-    #     count = 0
-    #     for atribut in data:
-    #         # print(f"{atribut} = {site[caracteristici]}")
-    #         if atribut == "Result":
-    #             if site[-1] == "-1":
-    #                 dict2["REZULTAT"] = "Suspicios"
-    #             elif site[-1] == "0":
-    #                 dict2["REZULTAT"] = "Nesigur"
-    #             elif site[-1] == "1":
-    #                 dict2["REZULTAT"] = "Sigur"
-    #
-    #         else:
-    #             dict[f"{atribut}"] = site[count]
-    #             count += 1
-    #     iesire = {dict: dict2}
-    # return iesire
     iesire = {}
+    tupla_finala = ()
     for site in vector_date:
+        tupla = ()
+        tupla_intermediara = ()
+        for i in range(0, len(site)):
+            if i == 30:
+                tupla  = tupla + (site[i],)
+            else:
+                tupla_intermediara = tupla_intermediara + (site[i],)
+        tupla_finala = tupla_finala + (tupla_intermediara,) + (tupla)
         dict = {}
         dict2 = {}
         count = 0
@@ -86,28 +74,34 @@ def incrucisare(vector_date, data):
             # print(f"{atribut} = {site[caracteristici]}")
             if atribut == "Result":
                 if site[-1] == "-1":
-                    dict2["REZULTAT"] = "Suspicios"
+                    dict2["REZULTAT"] = "-1"
                 elif site[-1] == "0":
-                    dict2["REZULTAT"] = "Nesigur"
+                    dict2["REZULTAT"] = "0"
                 elif site[-1] == "1":
-                    dict2["REZULTAT"] = "Sigur"
+                    dict2["REZULTAT"] = "1"
             else:
                 dict[f"{atribut}"] = site[count]
                 count += 1
         iesire[json.dumps(dict)] = dict2
-    return iesire
+    #return iesire
+    return tupla_finala
 
 
 # print(data[1])
 date = parsare(data)
 afisare(date)
 this_list = incrucisare(date, df)
-#json
-with open('date_parsate', 'w') as f:
-    for key, value in this_list.items():
-        f.write(f"{key}:{value}")
+print(this_list)
+with open('date_parsate_tuples', 'w') as f:
+    for key in this_list:
+        f.write(f"{key}")
         f.write("\n")
+
+#json
+# with open('date_parsate', 'w') as f:
+#     for key, value in this_list.items():
+#         f.write(f"{key}:{value}")
+#         f.write("\n")
 #dic
-#this_list[0]
 
 
