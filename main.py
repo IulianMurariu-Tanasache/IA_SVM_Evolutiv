@@ -59,14 +59,14 @@ def incrucisare(vector_date, data):
     iesire = {}
     tupla_finala = ()
     for site in vector_date:
-        tupla = ()
-        tupla_intermediara = ()
+        tupla  = ()
+        tupla_intermediara = []
         for i in range(0, len(site)):
             if i == 30:
-                tupla  = tupla + (site[i],)
+                tupla = tupla + (site[i],)
             else:
-                tupla_intermediara = tupla_intermediara + (site[i],)
-        tupla_finala = tupla_finala + (tupla_intermediara,) + (tupla)
+                tupla_intermediara.append(site[i])
+        tupla_finala = tupla_finala + tuple((tupla_intermediara,)) + tupla
         dict = {}
         dict2 = {}
         count = 0
@@ -91,10 +91,9 @@ def incrucisare(vector_date, data):
 date = parsare(data)
 afisare(date)
 this_list = incrucisare(date, df)
-print(this_list)
 with open('date_parsate_tuples', 'w') as f:
-    for key in this_list:
-        f.write(f"{key}")
+    for i in range(0,  len(this_list),2):
+        f.write(f"{this_list[i]} --> {this_list[i+1]}")
         f.write("\n")
 
 #json
