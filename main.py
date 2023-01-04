@@ -1,13 +1,17 @@
+import random
+
 from scipy.io import arff
 import pandas
 import re
 import json
+import numpy as np
 
 data = arff.loadarff(r"E:\anul4\IA\Proiectt\IA_SVM_Evolutiv\Training-Dataset-1.arff")
 df = pandas.DataFrame(data[0])
 data_to_parse = str(data[0])
 
-
+rad = [-1,-1,1,1,1,-1,-1,-1,1,1,1,1,-1,-1,0,-1,1,1,0,1,1,1,1,-1,1,-1,-1,-1,1,-1]
+    ###-1,1,1,1,-1,-1,-1,-1,-1,1,1,-1,1,-1,1,-1,-1,-1,0,1,1,1,1,-1,-1,-1,-1,1,1,-1
 # data[0] -> datele care nu iss string
 # -> data[0] --> array cu data >data[1]  -->artibutele
 # df -> tabel cuu date si valori
@@ -54,12 +58,11 @@ def afisare(vector_date):
         # print(string)
 
 
-
 def incrucisare(vector_date, data):
     iesire = {}
     tupla_finala = ()
     for site in vector_date:
-        tupla  = ()
+        tupla = ()
         tupla_intermediara = []
         for i in range(0, len(site)):
             if i == 30:
@@ -83,24 +86,65 @@ def incrucisare(vector_date, data):
                 dict[f"{atribut}"] = site[count]
                 count += 1
         iesire[json.dumps(dict)] = dict2
-    #return iesire
+    # return iesire
     return tupla_finala
 
+
+def functie_activare(date_calcul, vector_intrare, alpha, bias):
+    suma = 0
+    produs_scalar = 0
+    for i in range(0, len(vector_intrare), 2):
+        for j in range(0, 30):
+            produs_scalar += date_calcul[j] * int(vector_intrare[i][j])
+        suma = suma + alpha[i] * int(vector_intrare[i + 1]) * produs_scalar
+    return suma + bias
+
+def ajustare(alpha,vector_intrare):
+    new_alpha = []
+    suma = 0
+    for i in range(0, len(alpha), 2):
+        new_alpha[i] = alpha[i]
+    for j in range(0,len(alpha), 2):
+        delta_pozitiv = 0
+        delta_negativ = 0
+        if vector_intrare[j + 1] == 1:
+            delta_negativ = 1
+            delta_pozitiv = 1
+        else:
+            delta_negativ = 0
+            delta_pozitiv = 0
+        suma = suma + alpha[j] * vector_intrare[j + 1]
+        s_pozitiv = 0
+        s_negativ = 0
+        while suma != 0:
+            s_pozitiv = s_pozitiv + new_alpha[j] * vector_intrare[j + 1] * delta_pozitiv
+            s_negativ = s_negativ + new_alpha[j] * vector_intrare[j + 1] * delta_negativ
+            if s_pozitiv > s_negativ:
+                k = random.randint(1,len(vector_intrare))#AICI AR PUTEA FI CEVA GRESEALA
+            else:
+                k = random.randint(1,len(vector_intrare))
+            if new_alpha[k] > suma:
+                new_alpha[k] = new_alpha[k] - suma
+            else:
+                new_alpha[k] = 0
+            suma = suma + alpha[j] * vector_intrare[j + 1]
+    return  new_alpha
 
 # print(data[1])
 date = parsare(data)
 afisare(date)
 this_list = incrucisare(date, df)
-with open('date_parsate_tuples', 'w') as f:
-    for i in range(0,  len(this_list),2):
-        f.write(f"{this_list[i]} --> {this_list[i+1]}")
-        f.write("\n")
+print(functie_activare(rad, this_list, 0.1, 0.1))
 
-#json
+# for i in range(0, len(this_list), 2):
+#     print(f"{this_list[i]} --> {this_list[i + 1]}")
+with open('date_parsate_tuples', 'w') as f:
+    for i in range(0, len(this_list), 2):
+        f.write(f"{this_list[i]} --> {this_list[i + 1]}")
+        f.write("\n")
+# json
 # with open('date_parsate', 'w') as f:
 #     for key, value in this_list.items():
 #         f.write(f"{key}:{value}")
 #         f.write("\n")
-#dic
-
-
+# dic
