@@ -22,9 +22,9 @@ def parsare(data):#functie ce  returneaza o tupla ce contine o lista de tuple, f
     vector_date = []
     for i in range(1, len(list3)):
         if list3[i] == ' ':
-            list3[i] = list3[i + 1]
+            list3[i] = int(list3[i + 1])
         if count < 31:
-            new_list.append(list3[i][0])
+            new_list.append(int(list3[i][0]))
             count += 1
         elif count == 31:
             # print(new_list)

@@ -1,11 +1,11 @@
 import random
+import numpy as np
 
-
-def produsul_scalar(data_calcul, vector):
+def produsul_scalar(data_calcul, x):
     #assert(len(data_calcul), len(vector))
     rezultat = 0
-    for i in range(0, len(vector)):
-        rezultat += int(data_calcul[i]) * int(vector[i])
+    for i in range(0, len(x)):
+        rezultat += int(data_calcul[i]) * int(x[i])
     return rezultat
 
 
@@ -20,7 +20,7 @@ def functie_activare(date_calcul, vector_intrare, alpha, bias):#functia de activ
     suma = 0
     produs = 0
     for i in range(0, len(vector_intrare)):
-        produs = produsul_scalar(vector_intrare[i][0], date_calcul)
+        produs = produsul_scalar(date_calcul, vector_intrare[i][0])
         suma += int(alpha[i]) * int(vector_intrare[i][1]) * int(produs)  # alfa vector cu 11054 elemente si o sa fie alpfa[i]
     return sign(suma + bias)
 
@@ -38,7 +38,7 @@ def suma_alfa_y(alpha, vector_intrare):
     for i in range(0, len(alpha)):
         suma = suma + alpha[i] * vector_intrare[i][1]
 
-    return suma
+    return 0 if np.abs(suma) < 0.000000000000001 else suma
 
 
 def ajustare(alpha, vector_intrare):#functie ajustare necesara algoritmului GATE
@@ -54,13 +54,13 @@ def ajustare(alpha, vector_intrare):#functie ajustare necesara algoritmului GATE
             s_pozitiv += new_alpha[j] * vector_intrare[j][1] * delta_pozitiv
             s_negativ += new_alpha[j] * vector_intrare[j][1] * delta_negativ
 
-        k = random.randint(0, len(vector_intrare))
+        k = random.randint(0, len(vector_intrare) - 1)
         if s_pozitiv > s_negativ:
             while vector_intrare[k][1] != 1:
-                k = random.randint(0, len(vector_intrare))
+                k = random.randint(0, len(vector_intrare) - 1)
         else:
             while vector_intrare[k][1] != -1:
-                k = random.randint(0, len(vector_intrare))
+                k = random.randint(0, len(vector_intrare) - 1)
         if new_alpha[k] > suma:
             new_alpha[k] = new_alpha[k] - suma
         else:

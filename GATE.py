@@ -1,11 +1,13 @@
 import random
 import numpy as np
+from ajustez import ajustare
 
 class GATE:
     def __init__(self, dataset, epochs, mutation_rate):
         self.x = [np.asarray(x[0]) for x in dataset]
         self.y = [x[1] for x in dataset]
-        self.population_size = 1000
+        self.dataset = dataset
+        self.population_size = 50
         self.length = len(dataset)
         self.alpha_pop = [[random.random() for y in range(0,self.length)] for x in range(0, self.population_size)]
         self.b = random.random()
@@ -15,7 +17,7 @@ class GATE:
         self.error = 0.001
 
     def fitness(self, alpha):
-        alpha_sum = np.cumsum(alpha)
+        alpha_sum = np.sum(alpha)
         sum = 0
         for i in range(0, self.length):
             for j in range(0, self.length):
@@ -65,21 +67,23 @@ class GATE:
         old_pop = [alpha for alpha in pop]
         
         while len(old_pop) > 0:
-            i = random.randrange(0, len(old_pop))
+            i = random.randint(0, len(old_pop) - 1)
             p1 = old_pop.pop(i)
 
             if len(old_pop) == 0:
                 break
 
-            i = random.randrange(0, len(old_pop))
+            i = random.randint(0, len(old_pop) - 1)
             p2 = old_pop.pop(i)
 
+            c1 = []
+            c2 = []
             for i in range(len(p1)):
                 gamma = random.random() # for each or only once?
-                c1 = gamma * p1[i] + (1 - gamma) * p2[i]
-                c2 = gamma * p2[i] + (1 - gamma) * p1[i]
-                new_pop.append(c1)
-                new_pop.append(c2)
+                c1.append(gamma * p1[i] + (1 - gamma) * p2[i])
+                c2.append(gamma * p2[i] + (1 - gamma) * p1[i])
+            new_pop.append(c1)
+            new_pop.append(c2)
 
         return new_pop
                 
@@ -89,34 +93,45 @@ class GATE:
         for alpha in pop:
             if random.random() < self.mutation_rate:
                 mutated_pop = []
-                g1 = int(random.random() * (len(alpha)))
-                g2 = int(random.random() * (len(alpha)))
+                g1 = random.randint(0, len(alpha) - 1)
+                g2 = random.randint(0, len(alpha) - 1)
                 for i in range(0, len(alpha)):
                     mutated_pop.append(alpha[i])
-                print(mutated_pop)
+                #print(mutated_pop)
                 aux = mutated_pop[g1]
                 mutated_pop[g1] = mutated_pop[g2]
                 mutated_pop[g2] = aux
-                print(mutated_pop)
+                #print(mutated_pop) todo: vezi daca face bine
                 new_pop.append(mutated_pop)
             else:
                 new_pop.append(alpha)
+        return new_pop
+
+    def adjustment(self, alpha_pop):
+        new_pop = []
+        for alpha in alpha_pop:
+            new_alpha = ajustare(alpha, self.dataset)
+            new_pop.append(new_alpha)
+        return new_pop
 
     def run_algorithm(self):
         curr_fitness = 0
         no_change = 0
         for ep in range(0, self.epochs):
-            best_pop = self.elitism(self.alpha_pop)
-            best_pop_fitness = self.fitness(best_pop)
             #adjustment here
+            new_pop = self.adjustment(self.alpha_pop)
+            best_pop = self.elitism(new_pop)
+            best_pop_fitness = self.fitness(best_pop)
             if np.abs(curr_fitness - self.error) <= best_pop_fitness <= np.abs(curr_fitness + self.error):
                 no_change += 1
                 if no_change > self.early_stop:
                     break
-            new_pop = self.tournir_selection(self.alpha_pop)
+            new_pop = self.tournir_selection(new_pop)
             new_pop = self.crossover(new_pop)
+            new_pop.append(best_pop)
             new_pop = self.mutation(new_pop)
             #adjustment here
+            new_pop = self.adjustment(new_pop)
             self.alpha_pop = new_pop
         lagrange_mul = self.elitism(self.alpha_pop)
         return lagrange_mul, self.bias_computation(lagrange_mul)

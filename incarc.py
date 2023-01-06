@@ -8,6 +8,6 @@ import pandas
 
 
 def incarcare_datele_pentru_antrenare():#incarc datele din fisirerul cu extensia arff
-    data = arff.loadarff(r"E:\anul4\IA\Proiectt\IA_SVM_Evolutiv\Training-Dataset-1.arff")
+    data = arff.loadarff(r".\scurt.arff")
     df = pandas.DataFrame(data[0])
     return data, df

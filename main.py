@@ -1,6 +1,7 @@
 from ajustez import functie_activare
-from incarcare_date.incarc import incarcare_datele_pentru_antrenare
-from parsare.data_set import parsare, creare_dictionare, scriere_fisier, scriere_dictionare_in_fisier
+from incarc import incarcare_datele_pentru_antrenare
+from data_set import parsare, creare_dictionare, scriere_fisier, scriere_dictionare_in_fisier
+from SVM import SVM
 
 rad = [-1, -1, 1, 1, 1, -1, -1, -1, 1, 1, 1, 1, -1, -1, 0, -1, 1, 1, 0, 1, 1, 1, 1, -1, 1, -1, -1, -1, 1, -1]
 ###-1,1,1,1,-1,-1,-1,-1,-1,1,1,-1,1,-1,1,-1,-1,-1,0,1,1,1,1,-1,-1,-1,-1,1,1,-1
@@ -20,7 +21,12 @@ def pregatire_date(date):  # imparte setul de date intre cele de antrenare si ce
 
 date = parsare(data)
 antrenare, test = pregatire_date(date)
-scriere_fisier(date, "tuple")
+#scriere_fisier(date, "tuple")
 this_list = creare_dictionare(date, df)
-scriere_dictionare_in_fisier(this_list, "incrucisare")
-print(functie_activare(rad, date, date[0], 0.1))
+#scriere_dictionare_in_fisier(this_list, "incrucisare")
+#print(functie_activare(rad, date, date[0], 0.1))
+
+svm = SVM(antrenare, test)
+svm.antrenare()
+print(test[0])
+print(svm.prezicere(test[0][0]), test[0][1])
