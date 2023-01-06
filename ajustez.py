@@ -2,6 +2,7 @@ import random
 
 
 def produsul_scalar(data_calcul, vector):
+    #assert(len(data_calcul), len(vector))
     rezultat = 0
     for i in range(0, len(vector)):
         rezultat += int(data_calcul[i]) * int(vector[i])
@@ -17,12 +18,10 @@ def sign(suma):
 
 def functie_activare(date_calcul, vector_intrare, alpha, bias):#functia de activare necesara calculului multiplicatorilor lagrangenieni
     suma = 0
-    rez = 0
     produs = 0
     for i in range(0, len(vector_intrare)):
-        produs += produsul_scalar(vector_intrare[i][0], date_calcul)
-        suma += int(alpha[0][0]) * int(vector_intrare[i][1]) * int(
-            produs)  # alfa vector cu 11054 elemente si o sa fie alpfa[i]
+        produs = produsul_scalar(vector_intrare[i][0], date_calcul)
+        suma += int(alpha[i]) * int(vector_intrare[i][1]) * int(produs)  # alfa vector cu 11054 elemente si o sa fie alpfa[i]
     return sign(suma + bias)
 
 
@@ -58,16 +57,10 @@ def ajustare(alpha, vector_intrare):#functie ajustare necesara algoritmului GATE
         k = random.randint(0, len(vector_intrare))
         if s_pozitiv > s_negativ:
             while vector_intrare[k][1] != 1:
-                if vector_intrare[k][1] == 1:
-                    break
-                else:
-                    k = random.randint(0, len(vector_intrare))  # de verificat daca vector_intrare[k][1] = 1
+                k = random.randint(0, len(vector_intrare))
         else:
             while vector_intrare[k][1] != -1:
-                if vector_intrare[k][1] == -1:
-                    break
-                else:
-                    k = random.randint(0, len(vector_intrare))  # de verificat daca vector_intrare[k][1] = 1
+                k = random.randint(0, len(vector_intrare))
         if new_alpha[k] > suma:
             new_alpha[k] = new_alpha[k] - suma
         else:

@@ -2,7 +2,7 @@ import re
 import json
 
 
-def parsare(data):#functttie ce  returneaza o tupla ce contine o lista de tuple, ficare tupla continand o lista cu elemente si un rezultat
+def parsare(data):#functie ce  returneaza o tupla ce contine o lista de tuple, ficare tupla continand o lista cu elemente si un rezultat
     list = []
     list2 = []
     list3 = []
@@ -43,7 +43,7 @@ def scriere_fisier(data, fisier):
             f.write("\n")
 
 
-def incrucisare(vector_date, data): #functie ce coreleaza datele cu semnificatia ficareia
+def creare_dictionare(vector_date, data): #functie ce coreleaza datele cu semnificatia ficareia
     iesire = {}#ok
     dict = {}
     dict2 = {}
@@ -65,7 +65,7 @@ def incrucisare(vector_date, data): #functie ce coreleaza datele cu semnificatia
     return iesire
 
 
-def scriere_fisier_incrucisat(this_list, file_name):
+def scriere_dictionare_in_fisier(this_list, file_name):
     with open(f'{file_name}', 'w') as f:
         for i in this_list:
             f.write(f"{i} ")
