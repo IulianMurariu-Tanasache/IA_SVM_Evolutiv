@@ -3,11 +3,11 @@ import numpy as np
 from ajustez import ajustare
 
 class GATE:
-    def __init__(self, dataset, epochs, mutation_rate):
+    def __init__(self, dataset, epochs, mutation_rate, pop_size):
         self.x = [np.asarray(x[0]) for x in dataset]
         self.y = [x[1] for x in dataset]
         self.dataset = dataset
-        self.population_size = 50
+        self.population_size = pop_size
         self.length = len(dataset)
         self.alpha_pop = [[random.random() for y in range(0,self.length)] for x in range(0, self.population_size)]
         self.b = random.random()
@@ -117,9 +117,9 @@ class GATE:
     def run_algorithm(self):
         curr_fitness = 0
         no_change = 0
+        #adjustment here
+        new_pop = self.adjustment(self.alpha_pop)
         for ep in range(0, self.epochs):
-            #adjustment here
-            new_pop = self.adjustment(self.alpha_pop)
             best_pop = self.elitism(new_pop)
             best_pop_fitness = self.fitness(best_pop)
             if np.abs(curr_fitness - self.error) <= best_pop_fitness <= np.abs(curr_fitness + self.error):

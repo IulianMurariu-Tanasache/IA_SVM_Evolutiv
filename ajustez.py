@@ -38,14 +38,15 @@ def suma_alfa_y(alpha, vector_intrare):
     for i in range(0, len(alpha)):
         suma = suma + alpha[i] * vector_intrare[i][1]
 
-    return 0 if np.abs(suma) < 0.000000000000001 else suma
+    return suma
 
 
-def ajustare(alpha, vector_intrare):#functie ajustare necesara algoritmului GATE
+#functie ajustare necesara algoritmului GATE
+def ajustare(alpha, vector_intrare):
     new_alpha = [x for x in alpha]
     suma = suma_alfa_y(alpha, vector_intrare)
 
-    while suma != 0:
+    while not(1 > suma > -1):
         s_pozitiv = 0
         s_negativ = 0
         for j in range(0, len(new_alpha)):

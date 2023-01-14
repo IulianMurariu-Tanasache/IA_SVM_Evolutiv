@@ -2,9 +2,8 @@ from ajustez import functie_activare
 from incarc import incarcare_datele_pentru_antrenare
 from data_set import parsare, creare_dictionare, scriere_fisier, scriere_dictionare_in_fisier
 from SVM import SVM
+from evaluate import evaluate
 
-rad = [-1, -1, 1, 1, 1, -1, -1, -1, 1, 1, 1, 1, -1, -1, 0, -1, 1, 1, 0, 1, 1, 1, 1, -1, 1, -1, -1, -1, 1, -1]
-###-1,1,1,1,-1,-1,-1,-1,-1,1,1,-1,1,-1,1,-1,-1,-1,0,1,1,1,1,-1,-1,-1,-1,1,1,-1
 data, df = incarcare_datele_pentru_antrenare()  # data contine datele din arff, ce trebuie parsate
 
 
@@ -21,12 +20,16 @@ def pregatire_date(date):  # imparte setul de date intre cele de antrenare si ce
 
 date = parsare(data)
 antrenare, test = pregatire_date(date)
-#scriere_fisier(date, "tuple")
 this_list = creare_dictionare(date, df)
-#scriere_dictionare_in_fisier(this_list, "incrucisare")
-#print(functie_activare(rad, date, date[0], 0.1))
 
 svm = SVM(antrenare, test)
-svm.antrenare()
-print(test[0])
-print(svm.prezicere(test[0][0]), test[0][1])
+#svm.antrenare()
+#svm.salvare_model('./model3')
+svm.incarcare_model('./model2')
+print(test)
+#print(svm.prezicere(test[0][0]), test[0][1])
+evaluate(svm, test)
+
+
+#model1 -> 10 epochs, 100 pop_size, 1000 dataset
+#model2 -> 20 epochs, 100 pop_size, 1000 dataset -> nu s-a imbunatatit

@@ -1,8 +1,8 @@
 import re
 import json
 
-
-def parsare(data):#functie ce  returneaza o tupla ce contine o lista de tuple, ficare tupla continand o lista cu elemente si un rezultat
+#functie ce  returneaza o tupla ce contine o lista de tuple, ficare tupla continand o lista cu elemente si un rezultat
+def parsare(data):
     list = []
     list2 = []
     list3 = []
